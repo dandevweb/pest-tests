@@ -11,3 +11,7 @@ test('testando código 404')
 test('testando o código 403:: não tem permissão de acesso')
     ->get('/403')
     ->assertForbidden();
+
+test('testando o código 500:: erro interno do servidor')
+    ->get('/500')
+    ->assertServerError();

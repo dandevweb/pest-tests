@@ -20,3 +20,7 @@ Route::get('/', function () {
 Route::get('/403', function () {
     return abort(403);
 });
+
+Route::get('/500', function () {
+    return abort(500);
+});
