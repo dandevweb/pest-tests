@@ -32,3 +32,12 @@ Route::get('/products', function () {
         'products' => Product::all(),
     ]);
 })->name('products');
+
+Route::post('/products', function () {
+    Product::create([
+        'title' => request()->title,
+    ]);
+
+
+    return response()->json('', 201);
+})->name('products.store');
