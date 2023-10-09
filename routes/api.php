@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,19 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+Route::get(
+    'products',
+    function () {
+        $products = Product::all();
+        $products->map(fn ($p) => ['title' => $p->title]);
+
+        return [
+            ['title' => 'Produto A'],
+            ['title' => 'Produto B'],
+            ...$products->toArray(),
+        ];
+    }
+);
