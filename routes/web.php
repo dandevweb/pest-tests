@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,7 +34,12 @@ Route::get('/products', function () {
     ]);
 })->name('products');
 
-Route::post('/products', function () {
+Route::post('/products', function (Request $request) {
+
+    $request->validate([
+        'title' => 'required|max:255',
+    ]);
+
     Product::create([
         'title' => request()->title,
     ]);
