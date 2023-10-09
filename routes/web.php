@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,3 +25,10 @@ Route::get('/403', function () {
 Route::get('/500', function () {
     return abort(500);
 });
+
+
+Route::get('/products', function () {
+    return view('products', [
+        'products' => Product::all(),
+    ]);
+})->name('products');
