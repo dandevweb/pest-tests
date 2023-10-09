@@ -6,6 +6,8 @@ use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\post;
 use function Pest\Laravel\postJson;
+use function Pest\Laravel\putJson;
+use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
 
 it('should be able to create a product', function () {
@@ -22,7 +24,25 @@ it('should be able to create a product', function () {
 });
 
 it('should be able to update a product', function () {
-})->todo();
+    $product = Product::factory()->create(['title' => 'Título do produto']);
+
+    putJson(route('products.update', $product), [
+        'title' => 'Título do produto atualizado',
+    ])->assertOk();
+
+    assertDatabaseHas('products', [
+        'id' => $product->id,
+        'title' => 'Título do produto atualizado'
+    ]);
+
+    expect($product)
+        ->refresh()
+        ->title->toBe('Título do produto atualizado');
+
+    assertSame('Título do produto atualizado', $product->title);
+
+    assertDatabaseCount('products', 1);
+});
 
 it('should be able to delete a product', function () {
 })->todo();
