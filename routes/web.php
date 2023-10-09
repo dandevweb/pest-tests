@@ -49,3 +49,15 @@ Route::put('/products/{product}', function (Product $product) {
 
     return response()->json('', 200);
 })->name('products.update');
+
+Route::delete('/products/{product}', function (Product $product) {
+    $product->forceDelete();
+
+    return response()->json('', 200);
+})->name('products.destroy');
+
+Route::delete('/products/{product}/soft-delete', function (Product $product) {
+    $product->delete();
+
+    return response()->json('', 200);
+})->name('products.soft-delete');
