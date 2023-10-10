@@ -26,6 +26,24 @@ test('an email was sent to the correct user', function () {
 
     Mail::assertSent(
         WelcomeEmail::class,
-        fn (WelcomeEmail $mail) => $mail->hasTo($user->email)
+        fn (WelcomeEmail $mail) => $mail->assertHasTo($user->email)
     );
+});
+
+test('an email should contain the user name', function () {
+    $user = User::factory()->create();
+
+    $mail = new WelcomeEmail($user);
+
+    expect($mail)
+        ->assertHasSubject('Thank you ' . $user->name);
+});
+
+test('email content should contain user email with a text', function () {
+    $user = User::factory()->create();
+
+    $mail = new WelcomeEmail($user);
+
+    expect($mail)
+        ->assertSeeInHtml('Confirmando que o seu e-mail é: ' . $user->email);
 });

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,9 +17,9 @@ class WelcomeEmail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
-        //
+    public function __construct(
+        public User $user,
+    ) {
     }
 
     /**
@@ -27,7 +28,7 @@ class WelcomeEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Example',
+            subject: 'Thank you ' . $this->user->name,
         );
     }
 
@@ -37,7 +38,7 @@ class WelcomeEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.welcome',
         );
     }
 
