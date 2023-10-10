@@ -1,22 +1,24 @@
 <?php
 
-use App\Models\Product;
+use App\Models\User;
 
-use function Pest\Laravel\assertDatabaseCount;
-use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\assertDatabaseMissing;
-use function Pest\Laravel\assertSoftDeleted;
-use function Pest\Laravel\deleteJson;
+use App\Models\Product;
 use function Pest\Laravel\post;
-use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
+use function Pest\Laravel\postJson;
+use function Pest\Laravel\deleteJson;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertSoftDeleted;
+use function Pest\Laravel\assertDatabaseCount;
+use function Pest\Laravel\assertDatabaseMissing;
 
 it('should be able to create a product', function () {
 
     postJson(route('products.store'), [
         'title' => 'Título do produto',
+        'owner_id' => User::factory()->create()->id,
     ])->assertCreated();
 
     assertDatabaseHas('products', ['title' => 'Título do produto']);

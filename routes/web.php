@@ -42,6 +42,7 @@ Route::post('/products', function (Request $request) {
 
     Product::create([
         'title' => request()->title,
+        'owner_id' => request()->owner_id,
     ]);
 
 
