@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('owner_id')->constrained('users');
             $table->string('title');
             $table->string('code')->nullable();
+            $table->boolean('released')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

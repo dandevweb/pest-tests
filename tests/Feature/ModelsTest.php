@@ -26,3 +26,11 @@ test('model set mutator :: product code should be encrypted', function () {
 
     assertTrue(Hash::isHashed($product->code));
 });
+
+test('model scopes :: should bring only released products', function () {
+    Product::factory(10)->create(['released' => true]);
+    Product::factory(5)->create(['released' => false]);
+
+    expect(Product::released()->get())
+        ->toHaveCount(10);
+});

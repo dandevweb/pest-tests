@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -29,5 +30,10 @@ class Product extends Model
         return new Attribute(
             get: fn (string $title) => ucfirst($title)
         );
+    }
+
+    public function scopeReleased(Builder $query): Builder
+    {
+        return $query->whereReleased(true);
     }
 }
