@@ -5,6 +5,7 @@ use App\Models\Product;
 use App\Mail\WelcomeEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\ImportProductsJob;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -75,3 +76,11 @@ Route::delete('/products/{product}/soft-delete', function (Product $product) {
 Route::post('/sending-email/{user}', function (User $user) {
     Mail::to($user)->send(new WelcomeEmail($user));
 })->name('sending-email');
+
+Route::post('/products/import', function () {
+    $data = request()->get('data');
+
+    ImportProductsJob::dispatch($data, auth()->id());
+
+    return response()->json('', 200);
+})->name('products.import');
