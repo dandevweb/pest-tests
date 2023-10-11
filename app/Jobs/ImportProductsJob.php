@@ -2,12 +2,13 @@
 
 namespace App\Jobs;
 
+use App\Models\Product;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class ImportProductsJob implements ShouldQueue
 {
@@ -16,9 +17,11 @@ class ImportProductsJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
-    {
-        //
+    public function __construct(
+        protected readonly array $data,
+        protected readonly int $ownerId,
+
+    ) {
     }
 
     /**
@@ -26,6 +29,13 @@ class ImportProductsJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        foreach ($this->data as $products) {
+            foreach ($products as $product) {
+                Product::create([
+                    'title' => $product['title'],
+                    'owner_id' => $this->ownerId,
+                ]);
+            }
+        }
     }
 }

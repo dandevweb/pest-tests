@@ -73,7 +73,7 @@ Route::delete('/products/{product}/soft-delete', function (Product $product) {
 Route::post('/products/import', function () {
     $data = request()->get('data');
 
-    ImportProductsJob::dispatch($data);
+    ImportProductsJob::dispatch($data, auth()->id());
 
     return response()->json('', 200);
 })->name('products.import');
