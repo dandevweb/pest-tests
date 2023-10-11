@@ -2,6 +2,7 @@
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Jobs\ImportProductsJob;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -68,3 +69,11 @@ Route::delete('/products/{product}/soft-delete', function (Product $product) {
 
     return response()->json('', 200);
 })->name('products.soft-delete');
+
+Route::post('/products/import', function () {
+    $data = request()->get('data');
+
+    ImportProductsJob::dispatch($data);
+
+    return response()->json('', 200);
+})->name('products.import');
