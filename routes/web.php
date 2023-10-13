@@ -1,20 +1,14 @@
 <?php
 
+use App\Actions\CreateProductAction;
+use App\Models\User;
 use App\Models\Product;
+use App\Mail\WelcomeEmail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Jobs\ImportProductsJob;
+use App\Notifications\NewProductNotification;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,11 +35,8 @@ Route::post('/products', function (Request $request) {
         'title' => 'required|max:255',
     ]);
 
-    Product::create([
-        'title' => request()->title,
-        'owner_id' => request()->owner_id,
-    ]);
-
+    app(CreateProductAction::class)
+        ->handle($request->title, auth()->user());
 
     return response()->json('', 201);
 })->name('products.store');
@@ -69,6 +60,10 @@ Route::delete('/products/{product}/soft-delete', function (Product $product) {
 
     return response()->json('', 200);
 })->name('products.soft-delete');
+
+Route::post('/sending-email/{user}', function (User $user) {
+    Mail::to($user)->send(new WelcomeEmail($user));
+})->name('sending-email');
 
 Route::post('/products/import', function () {
     $data = request()->get('data');

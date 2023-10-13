@@ -3,7 +3,9 @@
 use App\Models\User;
 
 use App\Models\Product;
-use function Pest\Laravel\post;
+use Illuminate\Support\Facades\Notification;
+
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\putJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\deleteJson;
@@ -15,10 +17,13 @@ use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseMissing;
 
 it('should be able to create a product', function () {
+    Notification::fake();
+    $user = User::factory()->create();
+
+    actingAs($user);
 
     postJson(route('products.store'), [
         'title' => 'Título do produto',
-        'owner_id' => User::factory()->create()->id,
     ])->assertCreated();
 
     assertDatabaseHas('products', ['title' => 'Título do produto']);
