@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\CreateProductAction;
 use App\Models\User;
 use App\Models\Product;
 use App\Mail\WelcomeEmail;
@@ -44,10 +45,11 @@ Route::post('/products', function (Request $request) {
         'title' => 'required|max:255',
     ]);
 
-    Product::create([
-        'title' => request()->title,
-        'owner_id' => request()->owner_id,
-    ]);
+    $action = new CreateProductAction();
+    $action->handle(
+        $request->title,
+        auth()->user(),
+    );
 
 
     return response()->json('', 201);
