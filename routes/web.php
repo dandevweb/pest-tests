@@ -6,6 +6,7 @@ use App\Mail\WelcomeEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Jobs\ImportProductsJob;
+use App\Notifications\NewProductNotification;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,10 +46,11 @@ Route::post('/products', function (Request $request) {
     ]);
 
     Product::create([
-        'title' => request()->title,
-        'owner_id' => request()->owner_id,
+        'title' => request()->get('title'),
+        'owner_id' => auth()->id(),
     ]);
 
+    auth()->user()->notify(new NewProductNotification());
 
     return response()->json('', 201);
 })->name('products.store');
