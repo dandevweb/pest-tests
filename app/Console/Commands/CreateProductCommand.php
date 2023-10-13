@@ -12,7 +12,7 @@ class CreateProductCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'app:create-product-command {title} {user}';
+    protected $signature = 'app:create-product-command {title?} {user?}';
 
     /**
      * The console command description.
@@ -29,11 +29,19 @@ class CreateProductCommand extends Command
         $title = $this->argument('title');
         $user = $this->argument('user');
 
+        if (!$user) {
+            $user = $this->components->ask('What is the user id?');
+        }
+
+        if (!$title) {
+            $title = $this->components->ask('What is the title?');
+        }
+
         Product::create([
             'title' => $title,
             'owner_id' => $user,
         ]);
 
-        $this->info("Creating product {$title} for user {$user}");
+        $this->components->info("Product created!");
     }
 }
